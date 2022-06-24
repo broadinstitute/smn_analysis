@@ -1,7 +1,7 @@
 #!/usr/env python
 
 """ Read CRAM files"""
-""" The purpose of reading CRAM files - """
+""" The cram files contains the data of SMN mutations diagnosed samples. """
 import pysam
 HUMAN_G = '/Users/rakshya/SMA.2022/Homo_sapiens_assembly38.fasta'
 CRAM_F = '/Users/rakshya/SMA.2022/MAAC057.cram'
