@@ -3,7 +3,7 @@
 """Counts and prints the number of reads that overlap exon 7 of SMN1 and SMN2 in the input CRAM or BAM file. 
 """
 import pysam
-HUMAN_G = '/Users/rakshya/SMA.2022/Homo_sapiens_assembly38.fasta'
+REFERENCE_FASTA_PATH = '/Users/rakshya/SMA.2022/Homo_sapiens_assembly38.fasta'
 CRAM_F = '/Users/rakshya/SMA.2022/MAAC057.cram'
 cram = pysam.AlignmentFile(CRAM_F, 'rc', reference_filename=HUMAN_G)
 SMN1 = cram.count(region="chr5:70924941-70953012")
