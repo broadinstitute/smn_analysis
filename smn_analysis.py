@@ -1,7 +1,7 @@
 #!/usr/env python
 
-""" Read CRAM files"""
-""" The cram files contains the data of SMN mutations diagnosed samples. """
+"""Counts and prints the number of reads that overlap exon 7 of SMN1 and SMN2 in the input CRAM or BAM file. 
+"""
 import pysam
 HUMAN_G = '/Users/rakshya/SMA.2022/Homo_sapiens_assembly38.fasta'
 CRAM_F = '/Users/rakshya/SMA.2022/MAAC057.cram'
