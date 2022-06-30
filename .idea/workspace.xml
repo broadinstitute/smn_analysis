@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="69aacbe6-9e70-4368-b13d-ebc21fdf0de2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smn_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/smn_analysis.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
