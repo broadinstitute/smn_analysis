@@ -8,32 +8,6 @@ import pysam
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
-EXON_COORDINATES = [
-    ("chr5:70925087-70925184","chr5:70049669-70049766"),
-    ("chr5:70938839-70938910","chr5:70063415-70063486"),
-    ("chr5:70941389-70941508","chr5:70065965-70066084"),
-    ("chr5:70942358-70942558","chr5:70066934-70067134"),
-    ("chr5:70942718-70942870","chr5:70067294-70067446"),
-    ("chr5:70944658-70944753","chr5:70069235-70069330"),
-    ("chr5:70946066-70946176","chr5:70070641-70070751"),
-    ("chr5:70951941-70951994","chr5:70076521-70076574"),
-    ("chr5:70952439-70953015","chr5:70077019-70077595"),
-]
-
-EXON_LABELS = {
-    0: "1",
-    1: "2a",
-    2: "2b",
-    3: "3",
-    4: "4",
-    5: "5",
-    6: "6",
-    7: "7",
-    8: "8",
-}
-
-
 def parse_args():
     """Parse and return command-line args"""
     parser = argparse.ArgumentParser()
@@ -62,7 +36,7 @@ def compute_total_reads(cram_path):
     """
     cram_filename = os.path.basename(cram_path)
     idxstat_filename = f"{cram_filename}.idxstat.txt"
-    os.system(f"samtools idxstat {cram_path} > {idxstat_filename}")
+    os.system(f"samtools idxstat {cram_path}> {idxstat_filename}")
     idxstat_df = pd.read_table(idxstat_filename, names=[
         "chrom", "chrom_length", "mapped_read_counts", "unmapped_read_counts",
     ])
@@ -89,23 +63,26 @@ def main():
         record = {
             "SampleId": cram_filename_prefix,
             "TotalReads": total_reads,
-            "exons 1+2a+2b+3+4+5+6": 0,
-            "exon 7+8 ": 0
-
         }
-        for exon_count, (SMN1_exon_region, SMN2_exon_region) in enumerate(EXON_COORDINATES):
-            exon_label = EXON_LABELS[exon_count]
-            SMN1_exon_read_count = cram.count(region= SMN1_exon_region)
-            SMN2_exon_read_count = cram.count(region= SMN2_exon_region)
-            total_exon = SMN1_exon_read_count + SMN2_exon_read_count
-            record[f"Exon{exon_label}Reads"] = total_exon
-            if exon_count < 7:
-                record["exons 1+2a+2b+3+4+5+6"] += total_exon
+        SMN1_Nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
+        SMN2_Nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
+        for pileupcolumn in cram.pileup(contig="chr5", start=70951945, end=70951946, truncate=True):
+            for pileupread in pileupcolumn.pileups:
+                val = (pileupread.alignment.query_sequence[pileupread.query_position])
+                if val in SMN1_Nucleotide:
+                    SMN1_Nucleotide[val] += 1
+        for pileupcolumn in cram.pileup(contig="chr5", start=70076525, end=70076526, truncate=True):
+            for pileupread in pileupcolumn.pileups:
+                val = (pileupread.alignment.query_sequence[pileupread.query_position])
+                if val in SMN2_Nucleotide:
+                    SMN2_Nucleotide[val] += 1
+        record["SMN1_C_count"] = SMN1_Nucleotide["C"]
+        record["SMN1_Total_count"] = sum(SMN1_Nucleotide.values())
+        record["SMN2_C_count"] = SMN2_Nucleotide["C"]
+        record["SMN2_Total_count"] = sum(SMN2_Nucleotide.values())
 
-            else:
-                record["exon 7+8 "] += total_exon
         if args.verbose:
-           print(f"{total_reads:15,d} total reads in {cram_path}")
+            print(f"{total_reads:15,d} total reads in {cram_path}")
         output_records.append(record)
         cram.close()
     df = pd.DataFrame(output_records)
