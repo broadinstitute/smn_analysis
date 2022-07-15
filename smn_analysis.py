@@ -27,10 +27,8 @@ def parse_args():
 
 def compute_total_reads(cram_path):
     """Compute the total number of reads in the given cram file using samtools idxstat.
-
     Args:
         cram_path (str): local file path
-
     Return:
         int: The total number of reads
     """
@@ -46,6 +44,16 @@ def compute_total_reads(cram_path):
 
     return total_reads
 
+def nucleotide_count(cram,start,end):
+    SMN_Nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
+    for pileupcolumn in cram.pileup(contig="chr5", start=start, end=end, truncate=True):
+        for pileupread in pileupcolumn.pileups:
+            val = (pileupread.alignment.query_sequence[pileupread.query_position])
+            if val.upper() in SMN_Nucleotide:
+                SMN_Nucleotide[val] += 1
+            else:
+                raise Exception('Error')
+    return SMN_Nucleotide
 
 def main():
     args = parse_args()
@@ -64,23 +72,14 @@ def main():
             "SampleId": cram_filename_prefix,
             "TotalReads": total_reads,
         }
-        SMN1_Nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
-        SMN2_Nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
-        for pileupcolumn in cram.pileup(contig="chr5", start=70951945, end=70951946, truncate=True):
-            for pileupread in pileupcolumn.pileups:
-                val = (pileupread.alignment.query_sequence[pileupread.query_position])
-                if val in SMN1_Nucleotide:
-                    SMN1_Nucleotide[val] += 1
-        for pileupcolumn in cram.pileup(contig="chr5", start=70076525, end=70076526, truncate=True):
-            for pileupread in pileupcolumn.pileups:
-                val = (pileupread.alignment.query_sequence[pileupread.query_position])
-                if val in SMN2_Nucleotide:
-                    SMN2_Nucleotide[val] += 1
+        SMN1_Nucleotide = nucleotide_count(cram,70951945,70951946)
         record["SMN1_C_count"] = SMN1_Nucleotide["C"]
         record["SMN1_Total_count"] = sum(SMN1_Nucleotide.values())
+        SMN2_Nucleotide = nucleotide_count(cram,70076525,70076526)
         record["SMN2_C_count"] = SMN2_Nucleotide["C"]
         record["SMN2_Total_count"] = sum(SMN2_Nucleotide.values())
-
+        record["SMN c.840:C"] = record["SMN1_C_count"]+record["SMN2_C_count"]
+        record["SMN c.840:total"] = record["SMN1_Total_count"]+record["SMN2_Total_count"]
         if args.verbose:
             print(f"{total_reads:15,d} total reads in {cram_path}")
         output_records.append(record)
