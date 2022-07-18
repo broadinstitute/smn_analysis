@@ -6,7 +6,6 @@ import argparse
 import os
 import pysam
 import pandas as pd
-import matplotlib.pyplot as plt
 SMN1_C840_POSITION_1BASED = 70951946
 SMN2_C840_POSITION_1BASED = 70076526
 
@@ -87,22 +86,10 @@ def main():
             print(f"{total_reads:15,d} total reads in {cram_path}")
         output_records.append(record)
         cram.close()
-    """
-    scatter plot of the data generated in tsv file
-    """
     df = pd.DataFrame(output_records)
     df.to_csv(args.output_tsv, sep='\t', index=False)
     print("No of cram files: ", len(output_records), " output in", args.output_tsv)
-    df = pd.read_csv("c_count.tsv", sep='\t')
-    SMN_C_count = df['SMN c.840: Reads with C']
-    SMN_total = df['SMN c.840: Total Reads']
-    x = list(SMN_C_count)
-    y = list(SMN_total)
-    plt.scatter(x=x,y=y,color = 'b')
-    plt.grid(True)
-    plt.xlabel('SMN c.840: Reads with C')
-    plt.ylabel('SMN c.840: Total Reads')
-    plt.savefig('C_vs_total.png')
+
 
 if __name__ == "__main__":
     main()
