@@ -7,6 +7,8 @@ import os
 import pysam
 import pandas as pd
 import matplotlib.pyplot as plt
+SMN1_C840_POSITION_1BASED = 70951946
+SMN2_C840_POSITION_1BASED = 70076526
 
 def parse_args():
     """Parse and return command-line args"""
@@ -45,16 +47,16 @@ def compute_total_reads(cram_path):
     return total_reads
 
 def nucleotide_count(cram,start,end):
-    SMN_Nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
-    for pileupcolumn in cram.pileup(contig="chr5", start=start, end=end, truncate=True):
-        for pileupread in pileupcolumn.pileups:
-            val = (pileupread.alignment.query_sequence[pileupread.query_position])
+    smn_nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
+    for pileup_column in cram.pileup(contig="chr5", start=start, end=end, truncate=True):
+        for pileupread in pileup_column.pileups:
+            val = pileupread.alignment.query_sequence[pileupread.query_position]
             val = val.upper()
-            if val in SMN_Nucleotide:
-                SMN_Nucleotide[val] += 1
+            if val in smn_nucleotide:
+                smn_nucleotide[val] += 1
             else:
                 raise Exception(f'Unexpected base "{val}" found in {pileupread}')
-    return SMN_Nucleotide
+    return smn_nucleotide
 
 def main():
     args = parse_args()
@@ -73,23 +75,34 @@ def main():
             "SampleId": cram_filename_prefix,
             "TotalReads": total_reads,
         }
-        SMN1_C840_POSITION_1BASED = 70951945
-        SMN1_Nucleotide = nucleotide_count(cram, SMN1_C840_POSITION_1BASED - 1, SMN1_C840_POSITION_1BASED)
-        record["SMN1_C_count"] = SMN1_Nucleotide["C"]
-        record["SMN1_Total_count"] = sum(SMN1_Nucleotide.values())
-        SMN2_C840_POSITION_1BASED = 70076525
-        SMN2_Nucleotide = nucleotide_count(cram, SMN2_C840_POSITION_1BASED - 1, SMN2_C840_POSITION_1BASED)
-        record["SMN2_C_count"] = SMN2_Nucleotide["C"]
-        record["SMN2_Total_count"] = sum(SMN2_Nucleotide.values())
-        record["SMN c.840:C"] = record["SMN1_C_count"]+record["SMN2_C_count"]
-        record["SMN c.840:total"] = record["SMN1_Total_count"]+record["SMN2_Total_count"]
+        smn1_nucleotide = nucleotide_count(cram, SMN1_C840_POSITION_1BASED - 1, SMN1_C840_POSITION_1BASED)
+        record["SMN1_C_count"] = smn1_nucleotide["C"]
+        record["SMN1_Total_count"] = sum(smn1_nucleotide.values())
+        smn2_nucleotide = nucleotide_count(cram, SMN2_C840_POSITION_1BASED - 1, SMN2_C840_POSITION_1BASED)
+        record["SMN2_C_count"] = smn2_nucleotide["C"]
+        record["SMN2_Total_count"] = sum(smn2_nucleotide.values())
+        record["SMN c.840: Reads with C"] = record["SMN1_C_count"]+record["SMN2_C_count"]
+        record["SMN c.840: Total Reads"] = record["SMN1_Total_count"]+record["SMN2_Total_count"]
         if args.verbose:
             print(f"{total_reads:15,d} total reads in {cram_path}")
         output_records.append(record)
         cram.close()
+    """
+    scatter plot of the data generated in tsv file
+    """
     df = pd.DataFrame(output_records)
     df.to_csv(args.output_tsv, sep='\t', index=False)
     print("No of cram files: ", len(output_records), " output in", args.output_tsv)
-    
+    df = pd.read_csv("c_count.tsv", sep='\t')
+    SMN_C_count = df['SMN c.840: Reads with C']
+    SMN_total = df['SMN c.840: Total Reads']
+    x = list(SMN_C_count)
+    y = list(SMN_total)
+    plt.scatter(x=x,y=y,color = 'b')
+    plt.grid(True)
+    plt.xlabel('SMN c.840: Reads with C')
+    plt.ylabel('SMN c.840: Total Reads')
+    plt.savefig('C_vs_total.png')
+
 if __name__ == "__main__":
     main()
