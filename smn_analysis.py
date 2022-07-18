@@ -49,10 +49,11 @@ def nucleotide_count(cram,start,end):
     for pileupcolumn in cram.pileup(contig="chr5", start=start, end=end, truncate=True):
         for pileupread in pileupcolumn.pileups:
             val = (pileupread.alignment.query_sequence[pileupread.query_position])
-            if val.upper() in SMN_Nucleotide:
+            val = val.upper()
+            if val in SMN_Nucleotide:
                 SMN_Nucleotide[val] += 1
             else:
-                raise Exception('Error')
+                raise Exception(f'Unexpected base "{val}" found in {pileupread}')
     return SMN_Nucleotide
 
 def main():
@@ -72,10 +73,12 @@ def main():
             "SampleId": cram_filename_prefix,
             "TotalReads": total_reads,
         }
-        SMN1_Nucleotide = nucleotide_count(cram,70951945,70951946)
+        SMN1_C840_POSITION_1BASED = 70951945
+        SMN1_Nucleotide = nucleotide_count(cram, SMN1_C840_POSITION_1BASED - 1, SMN1_C840_POSITION_1BASED)
         record["SMN1_C_count"] = SMN1_Nucleotide["C"]
         record["SMN1_Total_count"] = sum(SMN1_Nucleotide.values())
-        SMN2_Nucleotide = nucleotide_count(cram,70076525,70076526)
+        SMN2_C840_POSITION_1BASED = 70076525
+        SMN2_Nucleotide = nucleotide_count(cram, SMN2_C840_POSITION_1BASED - 1, SMN2_C840_POSITION_1BASED)
         record["SMN2_C_count"] = SMN2_Nucleotide["C"]
         record["SMN2_Total_count"] = sum(SMN2_Nucleotide.values())
         record["SMN c.840:C"] = record["SMN1_C_count"]+record["SMN2_C_count"]
@@ -87,7 +90,6 @@ def main():
     df = pd.DataFrame(output_records)
     df.to_csv(args.output_tsv, sep='\t', index=False)
     print("No of cram files: ", len(output_records), " output in", args.output_tsv)
-
-
+    
 if __name__ == "__main__":
     main()
