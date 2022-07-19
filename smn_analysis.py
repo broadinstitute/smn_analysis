@@ -46,6 +46,17 @@ def compute_total_reads(cram_path):
     return total_reads
 
 def nucleotide_count(cram,start,end):
+    """
+    Compute the number of reads with C and Total reads
+    cram:
+        Alignment file
+    start:
+        SMN1_C840_POSITION_1BASED-1, SMN2_C840_POSITION_1BASED-1
+    end:
+        SMN1_C840_POSITION_1BASED, SMN2_C840_POSITION_1BASED
+    return:
+        C Nucleotide read count
+    """
     smn_nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
     for pileup_column in cram.pileup(contig="chr5", start=start, end=end, truncate=True):
         for pileupread in pileup_column.pileups:
