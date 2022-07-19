@@ -29,7 +29,7 @@ RUN apt update && apt-get install -y --no-install-recommends \
     zlib1g-dev
 
 # install htslib
-ENV SAMTOOLS_VERSION="1.13"
+ENV SAMTOOLS_VERSION="1.15.1"
 RUN wget https://github.com/samtools/htslib/releases/download/${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION}.tar.bz2 \
 	&& tar xjf htslib-${SAMTOOLS_VERSION}.tar.bz2 \
 	&& rm htslib-${SAMTOOLS_VERSION}.tar.bz2 \

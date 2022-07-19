@@ -12,7 +12,7 @@ SMN2_REGION = "chr5:70049669-70077595"
 SMN1_AND_SMN2_REGION = "chr5:70049669-70953015"
 SMN1_AND_SMN2_REGION_WITH_PADDING = "chr5:70048669-70954015"
 
-DOCKER_IMAGE = "weisburd/smn_analysis@sha256:d363a0b05a475624e47aabd9c667911eb01655e762a801ea1f855a636978857c"
+DOCKER_IMAGE = "weisburd/smn_analysis@sha256:611175ba58b0adcaead7a43fc17d4cb197f5e734868220de6d6c6688dbc95535"
 
 REFERENCE_FASTA_PATH = "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.fasta"
 REFERENCE_FASTA_FAI_PATH = "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.fai"
