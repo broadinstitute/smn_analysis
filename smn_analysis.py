@@ -57,17 +57,17 @@ def nucleotide_count(cram,start,end):
     return:
         C Nucleotide read count
     """
-    smn_nucleotide = {"T":0,"C":0,"G":0,"A":0,"N":0}
+    smn_nucleotide_counts = {"T":0,"C":0,"G":0,"A":0,"N":0}
     for pileup_column in cram.pileup(contig="chr5", start=start, end=end, truncate=True):
-        for pileupread in pileup_column.pileups:
-            if pileupread.query_position != None:
-                val = pileupread.alignment.query_sequence[pileupread.query_position]
+        for pileup_read in pileup_column.pileups:
+            if pileup_read.query_position is not None:
+                val = pileup_read.alignment.query_sequence[pileup_read.query_position]
                 val = val.upper()
-                if val in smn_nucleotide:
-                    smn_nucleotide[val] += 1
+                if val in smn_nucleotide_counts:
+                    smn_nucleotide_counts[val] += 1
                 else:
-                    raise Exception(f'Unexpected base "{val}" found in {pileupread}')
-    return smn_nucleotide
+                    raise Exception(f'Unexpected base "{val}" found in {pileup_read}')
+    return smn_nucleotide_counts
 
 def main():
     args = parse_args()
