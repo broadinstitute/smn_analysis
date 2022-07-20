@@ -12,7 +12,7 @@ SMN2_REGION = "chr5:70049669-70077595"
 SMN1_AND_SMN2_REGION = "chr5:70049669-70953015"
 SMN1_AND_SMN2_REGION_WITH_PADDING = "chr5:70048669-70954015"
 
-DOCKER_IMAGE = "weisburd/smn_analysis@sha256:611175ba58b0adcaead7a43fc17d4cb197f5e734868220de6d6c6688dbc95535"
+DOCKER_IMAGE = "weisburd/smn_analysis@sha256:4d978b5ca8d7ec95e9c620e0b891a30488c9797f065fb953b31eae40c6d1d46e"
 
 REFERENCE_FASTA_PATH = "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.fasta"
 REFERENCE_FASTA_FAI_PATH = "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.fai"
@@ -115,7 +115,7 @@ if len(steps) > 1:
     s2 = bp.new_step(
         f"Combine {len(steps)} tables",
         image=DOCKER_IMAGE,
-        cpu=0.25,
+        cpu=1,
         memory="standard",
         #storage="70Gi",
         output_dir=args.output_dir,
