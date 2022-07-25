@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="69aacbe6-9e70-4368-b13d-ebc21fdf0de2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/generate_scatterplot_and_analyze_result.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generate_scatterplot.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smn_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/smn_analysis.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,9 +76,6 @@
       <module name="smn_analysis" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="/usr/local/bin/python3.7" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
@@ -109,7 +109,8 @@
       <workItem from="1655903469547" duration="13962000" />
       <workItem from="1656366541554" duration="23597000" />
       <workItem from="1657733420918" duration="17855000" />
-      <workItem from="1657806604079" duration="33438000" />
+      <workItem from="1657806604079" duration="54546000" />
+      <workItem from="1658499322936" duration="12285000" />
     </task>
     <servers />
   </component>
