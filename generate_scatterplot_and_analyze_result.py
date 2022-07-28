@@ -33,7 +33,7 @@ def pltcolor(sma_status):
 
 def filter_input(df):
     a = df.loc[(df['c_count'] <= 0.01 * df['total_count']) & (df['total_count'] >= 5)]
-    value = {"SampleId":a.sample_id,
+    value = {"SampleId": a.SampleId,
              "SMA_status":a.SMA_status,
              "c_count":a.c_count,
              "total_count":a.total_count,
@@ -64,7 +64,7 @@ def main():
         plt.xlabel('SMN Reads with C')
         plt.ylabel('SMN c.840 position Total Reads')
         plt.title('SMN Reads with C  vs. Total Reads at c.840 Position')
-        plt.savefig('C_vs_total.png', dpi = 300)
+        plt.savefig("C_vs_total.png", dpi = 300)
 
 if __name__ == "__main__":
     main()
