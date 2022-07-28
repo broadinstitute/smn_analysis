@@ -92,8 +92,8 @@ def main():
         smn2_nucleotide = nucleotide_count(cram, SMN2_C840_POSITION_1BASED - 1, SMN2_C840_POSITION_1BASED)
         record["SMN2_C_count"] = smn2_nucleotide["C"]
         record["SMN2_Total_count"] = sum(smn2_nucleotide.values())
-        record["SMN c.840: Reads with C"] = record["SMN1_C_count"]+record["SMN2_C_count"]
-        record["SMN c.840: Total Reads"] = record["SMN1_Total_count"]+record["SMN2_Total_count"]
+        record["SMN c.840:_Reads_with_C"] = record["SMN1_C_count"]+record["SMN2_C_count"]
+        record["SMN c.840:_Total_Reads"] = record["SMN1_Total_count"]+record["SMN2_Total_count"]
         if args.verbose:
             print(f"{total_reads:15,d} total reads in {cram_path}")
         output_records.append(record)
